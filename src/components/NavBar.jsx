@@ -137,7 +137,7 @@ const Navbar = () => {
                 ))}
                 <li>
                   <a
-                    href="https://ppableo.github.io/"
+                    href="#home"
                     target="_blank"
                     className="flex gap-2 font-semibold text-gray-700 transition hover:text-primary light:text-white light:hover:text-white md:px-4"
                   >
