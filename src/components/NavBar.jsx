@@ -10,7 +10,7 @@ const links = [
     label: "Learn More"
   },
   {
-    to: "/reviews.jsx",
+    to: "/Reviews.jsx",
     label: "Reviews"
   }
 ]
