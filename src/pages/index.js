@@ -4,6 +4,8 @@ import Landing from "@/components/Landing"
 import FeaturesSection from "@/components/FeaturesSection"
 import Footer from "@/components/Footer"
 import FAQSection from "@/components/Faqs"
+import Reviews from "@/components/Reviews"
+
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -15,6 +17,7 @@ export default function Home() {
       <FeaturesSection />
       <FAQSection />
       <Footer />
+      <Reviews />
     </>
   )
 }

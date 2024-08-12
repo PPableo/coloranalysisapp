@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react"
+import Link from 'next/link';
 
 const links = [
   {
@@ -10,7 +11,7 @@ const links = [
     label: "Learn More"
   },
   {
-    to: "./Reviews", //src/components/Reviews.jsx  may need to use this source path
+    to: "/src/components/Reviews", //src/components/Reviews.jsx  may need to use this source path
     label: "Reviews"
   }
 ]
@@ -64,6 +65,14 @@ const Navbar = () => {
       })
     }
   }, [isToggled])
+
+  {links.map((link, index) => (
+  <li key={index}>
+    <Link href={link.to} className="hover:text-primary block transition light:hover:text-white md:px-4">
+      <span>{link.label}</span>
+    </Link>
+  </li>
+))}
 
   return (
     <header>

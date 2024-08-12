@@ -1,7 +1,7 @@
-"use client";
 import React, { useState, useEffect } from "react";
+// import Navbar from "@/components/NavBar";
 
-<NavBar />
+// <Navbar />
 
 function Reviews() {
     const [name, setName] = useState("");
@@ -38,7 +38,7 @@ function Reviews() {
     };
 
     return (
-    <body>
+    <div>
         <div
         className="flex rounded-full bg-primary/20 px-1.5 py-0.5 text-xs tracking-wider text-purple-700 light:bg-white/10 light:text-orange-300" //"text-2xl font-bold text-gray-900 light:text-white" //"absolute z-10 w-full border-b border-black/5 light:border-white/5 lg:border-transparent"
         //using this line to figure out the styles from the main page
@@ -121,7 +121,7 @@ function Reviews() {
             </div>
         </div>
         </div>
-    </body>
+    </div>
     );
 }
 
