@@ -23,25 +23,37 @@ const questions = [
 const seasonDetails = {
   Spring: {
     description: "In Korean color analysis, you're a 'Bright Spring' (봄 브라이트). You look best in clear, warm, and bright colors with medium to high chroma.",
-    color: [],
+    colors: ["#FF4500", "#FFA500", "#FFD700", "#00FF00", "#1E90FF"],
+    imageContent: "Cherry blossoms, fresh green leaves, and bright sunshine",
+    image: "/images/korean-spring-palette.jpg",
+    link: "https://www.colorme.co.kr/bright-spring",
     commonColor: "#FFA500",
     contrast: "Korean analysis focuses more on skin undertone and brightness, recommending vivid, clear colors. Western methods might emphasize hair and eye color more, potentially suggesting a broader range of warm, clear colors."
   },
   Summer: {
     description: "In Korean analysis, you're a 'True Summer' (여름 트루). You suit cool, soft colors with medium brightness and low to medium chroma.",
-    color: [],
+    colors: ["#4169E1", "#DB7093", "#20B2AA", "#DDA0DD", "#B0C4DE"],
+    imageContent: "Lavender fields, soft blue sky, and pastel flowers",
+    image: "/images/korean-summer-palette.jpg",
+    link: "https://www.colorme.co.kr/true-summer",
     commonColor: "#B0C4DE",
     contrast: "Korean analysis emphasizes softer, more muted cool tones for Summer types. Western analysis might include a wider range of cool colors, including some brighter options, based on overall coloring rather than just skin undertone."
   },
   Autumn: {
     description: "Korean analysis classifies you as 'Deep Autumn' (가을 딥). You shine in warm, rich colors with low to medium brightness and medium to high chroma.",
-    color: [],
+    colors: ["#8B4513", "#DAA520", "#CD853F", "#556B2F", "#800000"],
+    imageContent: "Rich autumn leaves, pumpkins, and warm earth tones",
+    image: "/images/korean-autumn-palette.jpg",
+    link: "https://www.colorme.co.kr/deep-autumn",
     commonColor: "#DAA520",
     contrast: "Korean analysis for Autumn types tends to favor deeper, more saturated warm colors. Western methods might include a broader spectrum of warm colors, including some lighter shades, based on hair and eye color as well as skin tone."
   },
   Winter: {
     description: "In Korean color theory, you're a 'True Winter' (겨울 트루). You look striking in cool, clear colors with high contrast and high chroma.",
-    color: [],
+    colors: ["#000080", "#8A2BE2", "#FF0000", "#00CED1", "#FFFFFF"],
+    imageContent: "Snow-capped mountains, clear night sky, and icy blue glaciers",
+    image: "/images/korean-winter-palette.jpg",
+    link: "https://www.colorme.co.kr/true-winter",
     commonColor: "#000080",
     contrast: "Korean Winter palettes often include very high contrast, cool-toned colors. Western analysis might suggest a mix of cool and neutral colors, potentially including more earth tones based on overall coloring."
   }
@@ -82,43 +94,15 @@ const SeasonQuiz = () => {
     setResult(season);
   };
 
-  const fetchPalette = async (season) => {
-    const colorLists = {
-      Spring: [
-        "#FF4500", // OrangeRed
-        "#FFA500", // Orange
-        "#FFD700", // Gold
-        "#00FF00", // Lime
-        "#1E90FF"  // DodgerBlue
-      ],
-      Summer: [
-        "#4169E1", // RoyalBlue
-        "#DB7093", // PaleVioletRed
-        "#20B2AA", // LightSeaGreen
-        "#DDA0DD", // Plum
-        "#B0C4DE"  // LightSteelBlue
-      ],
-      Autumn: [
-        "#8B4513", // SaddleBrown
-        "#DAA520", // GoldenRod
-        "#CD853F", // Peru
-        "#556B2F", // DarkOliveGreen
-        "#800000"  // Maroon
-      ],
-      Winter: [
-        "#000080", // Navy
-        "#8A2BE2", // BlueViolet
-        "#FF0000", // Red
-        "#00CED1", // DarkTurquoise
-        "#FFFFFF"  // White
-      ]
-    };
+  const [loading, setLoading] = useState(false);
 
-    const colors = colorLists[season];
+  const fetchPalette = async (season) => {
+    setLoading(true);
+    const commonColor = seasonDetails[season].commonColor.slice(1);
 
     try {
-      const response = await fetch(`https://www.thecolorapi.com/scheme?hex=${colors[0].slice(1)}&mode=monochrome&count=5`);
-      
+      const response = await fetch(`https://www.thecolorapi.com/scheme?hex=${commonColor}&mode=analogic&count=5`);
+
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -126,14 +110,16 @@ const SeasonQuiz = () => {
       const data = await response.json();
       const fetchedColors = data.colors.map(color => color.hex.value);
 
-      seasonDetails[season].color = fetchedColors;
-
       console.log('Fetched palette for', season, ':', fetchedColors);
       setPalette(fetchedColors);
     } catch (error) {
       console.error("Error fetching color palette:", error);
+    } finally {
+      setLoading(false);
     }
   };
+
+
 
   const resetQuiz = () => {
     setCurrentQuestion(0);
@@ -167,6 +153,16 @@ const SeasonQuiz = () => {
         <h3 className="text-2xl font-semibold mb-4 text-gray-800 text-center">
           Your Color Analysis Result
         </h3>
+        <h4 className="font-semibold mb-4 text-gray-800 text-center">Recommended Colors:</h4>
+        <div className="flex justify-center space-x-2 mb-2">
+          {details.colors.map((color, index) => (
+            <div
+              key={index}
+              className="w-6 h-6 rounded-full"
+              style={{ backgroundColor: color }}
+            ></div>
+          ))}
+        </div>
         <div className="bg-gradient-to-r from-pink-100 to-blue-100 p-6 rounded-md text-center">
           <p className="text-lg font-medium text-gray-700 mb-2">
             Your season is:
@@ -175,15 +171,32 @@ const SeasonQuiz = () => {
         </div>
         <div className="mt-4 text-sm text-gray-600">
           <p className="mb-2">{details.description}</p>
-          <div className="flex justify-center space-x-2 mb-2">
-            {palette.map((color, index) => (
-              <div
-                key={index}
-                className="w-12 h-12 rounded-full"
-                style={{ backgroundColor: color }}
-              />
-            ))}
+          <h4 className="font-semibold mb-4 text-gray-800 text-center">Common Color:</h4>
+          <div className="flex flex-col items-center mb-4">
+          <div
+            className="relative w-24 h-24 rounded-full"
+            style={{ backgroundColor: `${details.commonColor}` }}
+          >
+            <p className="absolute inset-0 flex items-center justify-center text-white font-semibold text-lg">
+              {details.commonColor}
+            </p>
           </div>
+        </div>
+          <h4 className="font-semibold mb-2 text-gray-800 text-center">Palette Based on Common Color:</h4>
+          {loading ? (
+            <div className="text-center">Loading palette...</div>
+          ) : (
+            <div className="flex justify-center space-x-2 mb-2">
+              {palette.map((color, index) => (
+                <div
+                  key={index}
+                  className="w-12 h-12 rounded-full"
+                  style={{ backgroundColor: color }}
+                />
+              ))}
+            </div>
+          )}
+
         </div>
         <div className="mt-4 text-sm text-gray-600">
           <h4 className="font-semibold mb-1">
@@ -256,4 +269,3 @@ const SeasonQuiz = () => {
 };
 
 export default SeasonQuiz;
-
