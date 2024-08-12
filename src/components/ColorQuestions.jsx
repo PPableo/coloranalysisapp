@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Container from "./Container";
 
 const questions = [
@@ -23,37 +23,25 @@ const questions = [
 const seasonDetails = {
   Spring: {
     description: "In Korean color analysis, you're a 'Bright Spring' (봄 브라이트). You look best in clear, warm, and bright colors with medium to high chroma.",
-    colors: ["#FF4500", "#FFA500", "#FFD700", "#00FF00", "#1E90FF"],
-    imageContent: "Cherry blossoms, fresh green leaves, and bright sunshine",
-    image: "https://singlecolorimage.com/get/FFA500/500x500",
-    link: "https://singlecolorimage.com/",
+    color: [],
     commonColor: "#FFA500",
     contrast: "Korean analysis focuses more on skin undertone and brightness, recommending vivid, clear colors. Western methods might emphasize hair and eye color more, potentially suggesting a broader range of warm, clear colors."
   },
   Summer: {
     description: "In Korean analysis, you're a 'True Summer' (여름 트루). You suit cool, soft colors with medium brightness and low to medium chroma.",
-    colors: ["#4169E1", "#DB7093", "#20B2AA", "#DDA0DD", "#B0C4DE"],
-    imageContent: "Lavender fields, soft blue sky, and pastel flowers",
-    image: "https://singlecolorimage.com/get/B0C4DE/500x500",
-    link: "https://singlecolorimage.com/",
+    color: [],
     commonColor: "#B0C4DE",
     contrast: "Korean analysis emphasizes softer, more muted cool tones for Summer types. Western analysis might include a wider range of cool colors, including some brighter options, based on overall coloring rather than just skin undertone."
   },
   Autumn: {
     description: "Korean analysis classifies you as 'Deep Autumn' (가을 딥). You shine in warm, rich colors with low to medium brightness and medium to high chroma.",
-    colors: ["#8B4513", "#DAA520", "#CD853F", "#556B2F", "#800000"],
-    imageContent: "Rich autumn leaves, pumpkins, and warm earth tones",
-    image: "https://singlecolorimage.com/get/DAA520/500x500",
-    link: "https://singlecolorimage.com/",
+    color: [],
     commonColor: "#DAA520",
     contrast: "Korean analysis for Autumn types tends to favor deeper, more saturated warm colors. Western methods might include a broader spectrum of warm colors, including some lighter shades, based on hair and eye color as well as skin tone."
   },
   Winter: {
     description: "In Korean color theory, you're a 'True Winter' (겨울 트루). You look striking in cool, clear colors with high contrast and high chroma.",
-    colors: ["#000080", "#8A2BE2", "#FF0000", "#00CED1", "#FFFFFF"],
-    imageContent: "Snow-capped mountains, clear night sky, and icy blue glaciers",
-    image: "https://singlecolorimage.com/get/000080/500x500",
-    link: "https://singlecolorimage.com/",
+    color: [],
     commonColor: "#000080",
     contrast: "Korean Winter palettes often include very high contrast, cool-toned colors. Western analysis might suggest a mix of cool and neutral colors, potentially including more earth tones based on overall coloring."
   }
@@ -69,18 +57,19 @@ const SeasonQuiz = () => {
   });
   const [result, setResult] = useState(null);
   const [quizStarted, setQuizStarted] = useState(false);
+  const [palette, setPalette] = useState([]);
 
-  const handleAnswer = answer => {
+  const handleAnswer = (answer) => {
     if (answer) {
-      setScores(prev => ({
+      setScores((prev) => ({
         ...prev,
         [questions[currentQuestion].category]:
-          prev[questions[currentQuestion].category] + 1
+          prev[questions[currentQuestion].category] + 1,
       }));
     }
 
     if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(prev => prev + 1);
+      setCurrentQuestion((prev) => prev + 1);
     } else {
       calculateResult();
     }
@@ -93,8 +82,57 @@ const SeasonQuiz = () => {
     setResult(season);
   };
 
-  const startQuiz = () => {
-    setQuizStarted(true);
+  const fetchPalette = async (season) => {
+    const colorLists = {
+      Spring: [
+        "#FF4500", // OrangeRed
+        "#FFA500", // Orange
+        "#FFD700", // Gold
+        "#00FF00", // Lime
+        "#1E90FF"  // DodgerBlue
+      ],
+      Summer: [
+        "#4169E1", // RoyalBlue
+        "#DB7093", // PaleVioletRed
+        "#20B2AA", // LightSeaGreen
+        "#DDA0DD", // Plum
+        "#B0C4DE"  // LightSteelBlue
+      ],
+      Autumn: [
+        "#8B4513", // SaddleBrown
+        "#DAA520", // GoldenRod
+        "#CD853F", // Peru
+        "#556B2F", // DarkOliveGreen
+        "#800000"  // Maroon
+      ],
+      Winter: [
+        "#000080", // Navy
+        "#8A2BE2", // BlueViolet
+        "#FF0000", // Red
+        "#00CED1", // DarkTurquoise
+        "#FFFFFF"  // White
+      ]
+    };
+
+    const colors = colorLists[season];
+
+    try {
+      const response = await fetch(`https://www.thecolorapi.com/scheme?hex=${colors[0].slice(1)}&mode=monochrome&count=5`);
+      
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      const fetchedColors = data.colors.map(color => color.hex.value);
+
+      seasonDetails[season].color = fetchedColors;
+
+      console.log('Fetched palette for', season, ':', fetchedColors);
+      setPalette(fetchedColors);
+    } catch (error) {
+      console.error("Error fetching color palette:", error);
+    }
   };
 
   const resetQuiz = () => {
@@ -107,6 +145,17 @@ const SeasonQuiz = () => {
     });
     setResult(null);
     setQuizStarted(false);
+    setPalette([]);
+  };
+
+  useEffect(() => {
+    if (result) {
+      fetchPalette(result);
+    }
+  }, [result]);
+
+  const startQuiz = () => {
+    setQuizStarted(true);
   };
 
   const progress = ((currentQuestion + 1) / questions.length) * 100;
@@ -122,35 +171,19 @@ const SeasonQuiz = () => {
           <p className="text-lg font-medium text-gray-700 mb-2">
             Your season is:
           </p>
-          <p className="text-3xl cmderfont-bold text-indigo-600">{result}</p>
+          <p className="text-3xl font-bold text-indigo-600">{result}</p>
         </div>
         <div className="mt-4 text-sm text-gray-600">
           <p className="mb-2">{details.description}</p>
           <div className="flex justify-center space-x-2 mb-2">
-            {details.colors.map((color, index) => (
+            {palette.map((color, index) => (
               <div
                 key={index}
-                className="w-6 h-6 rounded-full"
+                className="w-12 h-12 rounded-full"
                 style={{ backgroundColor: color }}
-              ></div>
+              />
             ))}
           </div>
-          <p className="text-center font-medium">
-            Common Color:{" "}
-            <span style={{ color: details.commonColor }}>
-              {details.commonColor}
-            </span>
-          </p>
-        </div>
-        <div className="mt-4">
-          <img
-            src={details.image}
-            alt={`${result} colors`}
-            className="w-full rounded-md"
-          />
-          <p className="text-xs text-gray-500 mt-1 italic">
-            {details.imageContent}
-          </p>
         </div>
         <div className="mt-4 text-sm text-gray-600">
           <h4 className="font-semibold mb-1">
@@ -158,20 +191,13 @@ const SeasonQuiz = () => {
           </h4>
           <p>{details.contrast}</p>
         </div>
-        <div className="mt-4 text-center">
-          <a
-            href={details.link}
-            className="text-blue-500 hover:underline"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            View your Korean color palette →
-          </a>
-        </div>
         <div className="mt-6 text-center">
           <button
-            className="bg-primary text-white rounded-full py-2 px-4 hover:[background-color:#6458ae]"
-            onClick={resetQuiz}>Retake Quiz</button>
+            className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
+            onClick={resetQuiz}
+          >
+            Restart Quiz
+          </button>
         </div>
       </div>
     );
@@ -201,6 +227,12 @@ const SeasonQuiz = () => {
   return (
     <Container>
       <div className="m-5 flex flex-col justify-center items-center py-8 border-y border-gray-200 light:border-gray-800">
+        <div className="w-full bg-gray-200 rounded-full h-2.5 mb-6">
+          <div
+            className="bg-[#6458ae] h-2.5 rounded-full"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
         <h2 className="text-xl font-semibold mb-4 text-gray-800">
           {questions[currentQuestion].text}
         </h2>
@@ -218,15 +250,10 @@ const SeasonQuiz = () => {
             <span className="relative">No</span>
           </button>
         </div>
-        <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
-          <div
-            className="bg-primary h-2 rounded-full"
-            style={{ width: `${progress}%` }}
-          ></div>
-        </div>
       </div>
     </Container>
   );
 };
 
 export default SeasonQuiz;
+
