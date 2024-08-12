@@ -1,6 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
 
+<NavBar />
+
 function Reviews() {
     const [name, setName] = useState("");
     const [reviewText, setReviewText] = useState("");
