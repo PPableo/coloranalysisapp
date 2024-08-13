@@ -17,7 +17,7 @@ export default function Home() {
       <FeaturesSection />
       <FAQSection />
       <Footer />
-      <Reviews />
+      {/* <Reviews /> if this line is uncommented then it puts the leave a review at the bottom of the page */}
     </>
   )
 }
