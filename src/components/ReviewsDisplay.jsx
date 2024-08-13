@@ -1,23 +1,24 @@
 import React from 'react';
 
-function ReviewsDisplay({ reviews }) {
-  return (
-    <div className="reviews">
-      <h1>Reviews</h1>
-      <div className="storedReviews">
-        {Array.isArray(reviews) && reviews.length > 0 ? (
-          reviews.map((review) => (
-            <div key={review.name} className="review">
-              <h2>{review.name}</h2>
-              <p>{review.review}</p>
-            </div>
-          ))
+const ReviewsDisplay = ({ reviews }) => {
+    return (
+    <div className="reviews-container mx-auto max-w-7xl flex flex-col items-center">  {/* Add flex-col for column layout */}
+        <h1 className="text-2xl font-bold text-center">Reviews</h1>
+        {reviews.length > 0 ? (
+        <ul className="reviews-list">
+            {reviews.map((review, index) => (
+                <li key={index} className="review">
+                    <br></br>
+                <h2>{review.name}</h2>
+                <p>{review.review}</p>
+            </li>
+                ))}
+        </ul>
         ) : (
-          <p>No reviews yet.</p>
+        <p>No reviews yet.</p>
         )}
-      </div>
     </div>
-  );
-}
+    );
+};
 
 export default ReviewsDisplay;

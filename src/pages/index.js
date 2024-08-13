@@ -6,6 +6,7 @@ import Footer from "@/components/Footer"
 import FAQSection from "@/components/Faqs"
 import Reviews from "@/components/Reviews"
 import ReviewsDisplay from "@/components/ReviewsDisplay"
+import ReviewForm from "@/components/ReviewForm"
 
 
 const inter = Inter({ subsets: ["latin"] })
@@ -16,10 +17,10 @@ export default function Home() {
       <Navbar />
       <Landing />
       <FeaturesSection />
-      <ReviewsDisplay />
+        <Reviews />
       <FAQSection />
       <Footer />
-      <Reviews />
+      <ReviewForm />
     </>
   )
 }
