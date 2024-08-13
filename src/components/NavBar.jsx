@@ -11,7 +11,7 @@ const links = [
     label: "Learn More"
   },
   {
-    to: "/src/components/Reviews", //src/components/Reviews.jsx  may need to use this source path
+    to: "/reviews", // /src/components/Reviews.jsx  may need to use this source path
     label: "Reviews"
   }
 ]
@@ -135,14 +135,11 @@ const Navbar = () => {
             <div className="w-full text-gray-600 light:text-gray-200 lg:w-auto lg:pr-4 lg:pt-0">
               <ul className="flex flex-col gap-6 tracking-wide lg:flex-row lg:gap-0 lg:text-sm">
                 {links.map((link, index) => (
-                  <li key={index}>
-                    <a
-                      href={link.to}
-                      className="hover:text-primary block transition light:hover:text-white md:px-4"
-                    >
-                      <span>{link.label}</span>
-                    </a>
-                  </li>
+  <li key={index}>
+    {/* Use Link component here */}
+    <Link href={link.to} className="hover:text-primary block transition light:hover:text-white md:px-4">
+      <span>{link.label}</span> </Link>
+  </li>
                 ))}
                 <li>
                   <a
