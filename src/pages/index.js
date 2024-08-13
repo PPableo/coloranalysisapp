@@ -5,6 +5,7 @@ import FeaturesSection from "@/components/FeaturesSection"
 import Footer from "@/components/Footer"
 import FAQSection from "@/components/Faqs"
 import Reviews from "@/components/Reviews"
+import ReviewsDisplay from "@/components/ReviewsDisplay"
 
 
 const inter = Inter({ subsets: ["latin"] })
@@ -15,9 +16,10 @@ export default function Home() {
       <Navbar />
       <Landing />
       <FeaturesSection />
+      <ReviewsDisplay />
       <FAQSection />
       <Footer />
-      {/* <Reviews /> if this line is uncommented then it puts the leave a review at the bottom of the page */}
+      <Reviews />
     </>
   )
 }
