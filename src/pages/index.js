@@ -8,8 +8,7 @@ import Reviews from "@/components/Reviews"
 import ReviewsDisplay from "@/components/ReviewsDisplay"
 import ReviewForm from "@/components/ReviewForm"
 
-
-const inter = Inter({ subsets: ["latin"] })
+const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   return (
@@ -22,5 +21,5 @@ export default function Home() {
       <Footer />
       <ReviewForm />
     </>
-  )
+  );
 }
