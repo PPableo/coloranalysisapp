@@ -35,7 +35,7 @@ const Footer = () => {
               <ul role="list" className="space-y-6">
                 <li>
                   <a
-                    href="https://github.com/PPableo/mpdmvf-app"
+                    href="https://github.com/PPableo/coloranalysisapp"
                     className="flex items-center space-x-3 transition hover:text-primary"
                   >
                     <svg

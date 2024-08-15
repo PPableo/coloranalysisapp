@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react"
+import Link from 'next/link';
+import Reviews from "./Reviews";
 
 const links = [
   {
@@ -10,7 +12,7 @@ const links = [
     label: "Learn More"
   },
   {
-    to: "/#reviews",
+    to: "./Reviews.jsx", // /src/components/Reviews.jsx  may need to use this source path
     label: "Reviews"
   }
 ]
@@ -64,6 +66,14 @@ const Navbar = () => {
       })
     }
   }, [isToggled])
+
+  {links.map((link, index) => (
+  <li key={index}>
+    <Link href={link.to} className="hover:text-primary block transition light:hover:text-white md:px-4">
+      <span>{link.label}</span>
+    </Link>
+  </li>
+))}
 
   return (
     <header>
@@ -126,18 +136,15 @@ const Navbar = () => {
             <div className="w-full text-gray-600 light:text-gray-200 lg:w-auto lg:pr-4 lg:pt-0">
               <ul className="flex flex-col gap-6 tracking-wide lg:flex-row lg:gap-0 lg:text-sm">
                 {links.map((link, index) => (
-                  <li key={index}>
-                    <a
-                      href={link.to}
-                      className="hover:text-primary block transition light:hover:text-white md:px-4"
-                    >
-                      <span>{link.label}</span>
-                    </a>
-                  </li>
+                <li key={index}>
+                {/* Use Link component here */}
+                <Link href={link.to} className="hover:text-primary block transition light:hover:text-white md:px-4">
+                <span>{link.label}</span> </Link>
+                </li>
                 ))}
                 <li>
                   <a
-                    href="https://ppableo.github.io/"
+                    href="#home"
                     target="_blank"
                     className="flex gap-2 font-semibold text-gray-700 transition hover:text-primary light:text-white light:hover:text-white md:px-4"
                   >
@@ -159,7 +166,7 @@ const Navbar = () => {
                   Get Started
                 </span>
               </a>
-            </div>
+              </div>
           </div>
         </div>
       </div>
