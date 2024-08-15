@@ -17,7 +17,7 @@ function Reviews() {
     };
 
     return (
-    <div>
+    <div id='reviews'>
         <ReviewsDisplay reviews={reviews} />
     </div>
     );

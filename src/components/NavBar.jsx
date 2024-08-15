@@ -12,7 +12,7 @@ const links = [
     label: "Learn More"
   },
   {
-    to: "./Reviews.jsx", // /src/components/Reviews.jsx  may need to use this source path
+    to: "./#reviews", // /src/components/Reviews.jsx  may need to use this source path
     label: "Reviews"
   }
 ]
